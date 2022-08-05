@@ -9,7 +9,6 @@ export interface CreateclientFormProps {
 
 const ClientUpdateForm: React.FC<CreateclientFormProps> = ({onSubmitCallback, onCancel, formData}) => {
     const handleSubmit = useCallback((values: ClientFormData) => {
-        console.log(values)
         if(onSubmitCallback){
             onSubmitCallback()
         }

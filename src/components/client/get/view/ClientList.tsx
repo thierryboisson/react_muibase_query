@@ -27,7 +27,7 @@ const ClientList = () => {
 
     const handleDelete = useCallback(() => {
         if (dataSelected) {
-            console.log("Delete " + dataSelected.id)
+
         }
         handleDeselect()
     }, [dataSelected, handleDeselect])

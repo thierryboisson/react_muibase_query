@@ -8,7 +8,6 @@ export interface CreateclientFormProps {
 
 const ClientCreateForm: React.FC<CreateclientFormProps> = ({onSubmitCallback, onCancel}) => {
     const handleSubmit = useCallback((values: ClientFormData) => {
-        console.log(values)
         if(onSubmitCallback){
             onSubmitCallback()
         }

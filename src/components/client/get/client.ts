@@ -25,6 +25,5 @@ export const useGetClient = ({id}: {id: number | undefined}) => {
     const {data, isLoading} =  useQuery<ClientFullResponse>(QUERY_GET_CLIENT, () => getClient(id), {
         enabled: id !== undefined
     })
-    console.log(data)
     return {data: data?.client_manager_client_by_pk ? data.client_manager_client_by_pk : undefined, isLoading}
 }

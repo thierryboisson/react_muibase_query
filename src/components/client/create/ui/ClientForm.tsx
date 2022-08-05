@@ -18,16 +18,13 @@ const ClientForm: React.FC<ClientFormProps> = ({values, onSubmit, onCancel}) => 
 
     const defaultValues: ClientFormData = useMemo(() => values ? values : {firstname: "", lastname: "", email: ""}, [values])
 
-    const {register, handleSubmit, control, getValues, formState} = useForm({defaultValues})
+    const {register, handleSubmit, control} = useForm({defaultValues})
     
     useEffect(() => {
         register("firstname", {validate: (value => value && value !== "")})
         register("lastname", {validate: (value => value && value !== "")})
         register("email", {validate: (value => value && value !== "")})       
     },[register])
-
-    console.log(getValues())
-    console.log(formState.errors)
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
