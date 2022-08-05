@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react"
 import { Controller, useForm } from "react-hook-form"
+import TextField from "../../../main/ui/form/TextField";
 
 export interface ClientFormProps {
     values?: ClientFormData,
@@ -13,27 +14,20 @@ export interface ClientFormData {
     email: string;
 }
 
-export const convertClientDataToClientFormData = (data: ClientFormData) => {
-    const {firstname, lastname, email} = data
-    return {firstname, lastname, email}
-} 
 const ClientForm: React.FC<ClientFormProps> = ({values, onSubmit, onCancel}) => {
 
     const defaultValues: ClientFormData = useMemo(() => values ? values : {firstname: "", lastname: "", email: ""}, [values])
 
-    const {register, unregister, handleSubmit, control} = useForm({defaultValues})
+    const {register, handleSubmit, control, getValues, formState} = useForm({defaultValues})
     
     useEffect(() => {
-        register("firstname", {required: true})
-        register("lastname", {required: true})
-        register("email", {required: true})
-        
-        return () => {
-            unregister("firstname")
-            unregister("lastname")
-            unregister("email")
-        }
-    },[register, unregister])
+        register("firstname", {validate: (value => value && value !== "")})
+        register("lastname", {validate: (value => value && value !== "")})
+        register("email", {validate: (value => value && value !== "")})       
+    },[register])
+
+    console.log(getValues())
+    console.log(formState.errors)
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -41,21 +35,30 @@ const ClientForm: React.FC<ClientFormProps> = ({values, onSubmit, onCancel}) => 
                 name="firstname"
                 control={control}
                 render={({field}) => (
-                    <input {...field}></input>
+                    <TextField 
+                        controllerProps={field}
+                        label="Firstname"
+                    />
                 )}
             />
              <Controller
                 name="lastname"
                 control={control}
                 render={({field}) => (
-                    <input {...field}></input>
+                    <TextField 
+                        controllerProps={field}
+                        label="Lastname"
+                    />
                 )}
             />
              <Controller
                 name="email"
                 control={control}
                 render={({field}) => (
-                    <input {...field}></input>
+                    <TextField 
+                        controllerProps={field}
+                        label="Email"
+                    />
                 )}
             />
             <button type="submit">Submit</button>

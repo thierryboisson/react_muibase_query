@@ -11,47 +11,46 @@ export interface EditionViewProps {
     data: Array<any>
     dataSelected: any | undefined
     onSelect: (id: number) => void
-    onUpdate: () => void
     onDelete: () => void
     onDeselect: () => void
     FormCreateComponent? : ReactElement
+    FormUpdateComponent? : ReactElement
+    formDataConverter?: (data: any) => any 
 }
 
-const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect, dataSelected, data, onUpdate, onDelete, FormCreateComponent }) => {
+const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect, dataSelected, data, onDelete, FormCreateComponent, FormUpdateComponent, formDataConverter }) => {
 
-    const {open, onClose, onOpen} = useModalService()
+    const {open: openInfo, onClose: onCloseInfo, onOpen: onOpenInfo} = useModalService()
     const {open: openCreateForm, onOpen: onOpenCreateForm, onClose: onCloseCreateForm} = useModalService()
+    const {open: openUpdateForm, onOpen: onOpenUpdateForm, onClose: onCloseUpdateForm} = useModalService()
 
     const handleSelect = useCallback((id: number) => {
         onSelect(id)
-        onOpen()
-    },[onSelect, onOpen])
+        onOpenInfo()
+    },[onSelect, onOpenInfo])
 
     const handleClose = useCallback(() => {
         onDeselect()
-        onClose()
-    },[onClose, onDeselect])
+        onCloseInfo()
+    },[onCloseInfo, onDeselect])
 
     const handleCreate = useCallback(() => {
         onDeselect()
         onOpenCreateForm()
     },[onDeselect, onOpenCreateForm])
 
-    const handleCreateSubmit = useCallback(() => {
-        onCloseCreateForm()
-    },[onCloseCreateForm])
+    const handleUpdate = useCallback(() => {
+        onCloseInfo()
+        onOpenUpdateForm()
+    },[onCloseInfo, onOpenUpdateForm])
 
-    const handleCancelCreate = useCallback(() => {
-        onCloseCreateForm()
-    },[onCloseCreateForm])
 
     const actions: Array<MenuActionItem> = useMemo(() => ([
         {
             id: "onUpdate",
             label: "Modify",
             process: () => {
-                onUpdate()
-                handleClose()
+                handleUpdate()
             }
         },
         {
@@ -62,22 +61,42 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
                 handleClose()
             }
         }
-    ]),[onDelete, onUpdate, handleClose])
+    ]),[onDelete, handleUpdate, handleClose])
+
+    const formData = useMemo(() => {
+        if(dataSelected){
+            return formDataConverter
+                ? formDataConverter(dataSelected)
+                : dataSelected
+        }
+        return undefined
+    },[dataSelected, formDataConverter])
 
     const CreateForm = useMemo(() => {
         return FormCreateComponent 
             ? React.cloneElement(FormCreateComponent, {...FormCreateComponent.props, 
-                onSubmitCallback: handleCreateSubmit,
-                onCancel: handleCancelCreate 
+                onSubmitCallback: onCloseCreateForm,
+                onCancel: onCloseCreateForm 
             })
             : undefined
-    },[FormCreateComponent, handleCancelCreate, handleCreateSubmit])
+    },[FormCreateComponent, onCloseCreateForm])
+
+    const UpdateForm = useMemo(() => {
+        return FormUpdateComponent 
+            ? React.cloneElement(FormUpdateComponent, {...FormUpdateComponent.props, 
+                onSubmitCallback: (onCloseUpdateForm),
+                onCancel: onCloseUpdateForm,
+                formData 
+            })
+            : undefined
+    },[FormUpdateComponent, formData, onCloseUpdateForm])
+
 
     return <Paper>
         {FormCreateComponent && <Button onClick={handleCreate}>Create</Button>}
         <DialogInfo
             data={dataSelected}
-            open={open}
+            open={openInfo}
             onClose={handleClose}
             attributs={attributs}
             actions={actions}
@@ -93,6 +112,14 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
                 onClose={onCloseCreateForm}
             >
                 {CreateForm}
+            </Modal>
+        }
+        {FormUpdateComponent && 
+            <Modal
+                open={openUpdateForm}
+                onClose={onCloseUpdateForm}
+            >
+                {UpdateForm}
             </Modal>
         }
     </Paper>

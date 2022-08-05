@@ -2,6 +2,8 @@ import React, { useCallback, useState } from "react"
 import EdtionView from "../../../main/edition-view/EditionView"
 import { Attribut } from "../../../main/ui/table/Table"
 import ClientCreateForm from "../../create/ui/ClientCreateForm"
+import ClientUpdateForm from "../../create/ui/ClientUpdateForm"
+import { convertClientFullDataToClientFormData } from "../../create/utils"
 import { useGetClient, useGetClients } from "../client"
 
 export const attributs: Array<Attribut> = [
@@ -23,13 +25,6 @@ const ClientList = () => {
         setIdSelected(undefined)
     }, [])
 
-    const handleUpdate = useCallback(() => {
-        if (dataSelected) {
-            console.log('UPDATE ' + dataSelected.id)
-        }
-        handleDeselect()
-    }, [dataSelected, handleDeselect])
-
     const handleDelete = useCallback(() => {
         if (dataSelected) {
             console.log("Delete " + dataSelected.id)
@@ -48,8 +43,9 @@ const ClientList = () => {
                 onDeselect={handleDeselect}
                 dataSelected={dataSelected}
                 onDelete={handleDelete}
-                onUpdate={handleUpdate}
                 FormCreateComponent={<ClientCreateForm/>}
+                FormUpdateComponent={<ClientUpdateForm/>}
+                formDataConverter={convertClientFullDataToClientFormData}
             />
        </React.Fragment>
 }
