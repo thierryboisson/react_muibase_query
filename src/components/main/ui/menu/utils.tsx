@@ -36,6 +36,12 @@ export const StyledListbox = styled('ul')(
         font-weight: 500;
         color: white;
     }
+
+    &.item-selected { 
+        background-color: ${color.textPrimary.main};
+        font-weight: 500;
+        color: white;
+    }
   
     &.${menuItemUnstyledClasses.disabled} {
         background-color: ${color.grey[300]};

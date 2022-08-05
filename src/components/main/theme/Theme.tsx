@@ -120,6 +120,10 @@ const css =`
     color: white;
   }
 
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
   input {
     font-size: 16px;
     padding: ${spacing(2)}px;

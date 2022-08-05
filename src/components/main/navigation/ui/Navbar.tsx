@@ -1,6 +1,7 @@
-import { MenuUnstyledContext, MenuUnstyledContextType, useMenu, useMenuItem } from '@mui/base';
+import { menuItemUnstyledClasses, MenuUnstyledContext, MenuUnstyledContextType, useMenu, useMenuItem } from '@mui/base';
 import clsx from 'clsx';
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { Link } from 'react-router-dom';
 import { StyledMenuItem } from '../../ui/menu/utils';
 
 const Menu = React.forwardRef(function Menu(
@@ -37,15 +38,15 @@ const Menu = React.forwardRef(function Menu(
 });
 
 const MenuItem = React.forwardRef(function MenuItem(
-    props: React.ComponentPropsWithoutRef<'li'>,
+    props: React.ComponentPropsWithoutRef<'li'> & {selected?: boolean},
     ref: React.Ref<any>,
 ) {
-    const { children, ...other } = props;
+    const { children, selected, ...other } = props;
 
-    const { getRootProps, disabled, focusVisible } = useMenuItem({ ref });
+    const { getRootProps, disabled } = useMenuItem({ ref });
 
     const classes = {
-        'focus-visible': focusVisible,
+        'item-selected': selected,
         'menu-item': true,
         disabled,
     };
@@ -65,20 +66,27 @@ export interface NavBarAction {
     path: string
 }
 
-const navbarActions: NavBarActions = [
-    {label: "Client", id: "client", path: "/client"},
-    {label: "Addresse", id: "addresse", path: "/addresse"},
-    {label: "Prestation", id: "prestation", path: "/prestation"}
-]
+export interface NavbarProps {
+    actions: NavBarActions
+}
 
-export default function NavBar() {
+const NavBar: React.FC<NavbarProps> = ({actions}) => {
+
+    const [menuSelectedId, setMenuSelectedId] = useState<string>(actions[0].id)
+
+    const onSelect = useCallback((id: string) => {
+        setMenuSelectedId(id)
+    },[])
+
     return (
       <React.Fragment>
         <Menu>
-           {navbarActions.map(({label, id}) => (
-             <MenuItem key={id}>{label}</MenuItem>
+           {actions.map(({label, id, path}) => (
+             <MenuItem selected={id === menuSelectedId} key={id}><Link onClick={() => onSelect(id)} to={path}>{label}</Link></MenuItem>
            ))}
         </Menu>
       </React.Fragment>
     );
   }
+
+  export default NavBar
