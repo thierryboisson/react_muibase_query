@@ -111,12 +111,12 @@ const css =`
     font-weight: 400;
     min-width: 75px;
     transition: color ${transition_duration}s, background-color ${transition_duration}s;
+    margin: ${spacing(2)}px;
   }
 
   button:hover {
     font-weight: 85;
     background-color: ${color.textPrimary.main};
-    font-weight: 500;
     color: white;
   }
   .row-selected{
@@ -170,6 +170,22 @@ const css =`
     width: 100%;
     align-items: center;
     justify-content: space-around;
+  }
+  .input-container {
+    padding-bottom: ${spacing(2)}px;
+  }
+  .input-label {
+    padding-left: ${spacing(2)}px;
+  }
+  input {
+    font-size: 16px;
+    padding: ${spacing(2)}px;
+    border-color: ${color.textPrimary.main};
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-style: solid;
   }
 `;
 

@@ -76,7 +76,7 @@ const MenuAction: React.FC<MenuActionProps> = ({options}) => {
     } else {
       setAnchorEl(event.currentTarget);
     }
-  },[])
+  },[isOpen])
 
   const handleButtonKeyDown = useCallback( (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -91,13 +91,6 @@ const MenuAction: React.FC<MenuActionProps> = ({options}) => {
   const close = useCallback( () => {
     setAnchorEl(null);
     buttonRef.current!.focus();
-  },[])
-
-  const createHandleMenuClick = useCallback((menuItem: string) => {
-    return () => {
-      console.log(`Clicked on ${menuItem}`);
-      close();
-    };
   },[])
 
   return (
