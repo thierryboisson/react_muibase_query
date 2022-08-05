@@ -1,5 +1,6 @@
 import React, { ReactElement, useCallback, useMemo } from "react"
 import Button from "../ui/button/Button"
+import DialogConfirm from "../ui/dialog/DialogConfirm"
 import DialogInfo from "../ui/dialog/DialogInfo"
 import Modal, { useModalService } from "../ui/dialog/Modal"
 import { MenuActionItem } from "../ui/menu/MenuAction"
@@ -23,6 +24,7 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
     const {open: openInfo, onClose: onCloseInfo, onOpen: onOpenInfo} = useModalService()
     const {open: openCreateForm, onOpen: onOpenCreateForm, onClose: onCloseCreateForm} = useModalService()
     const {open: openUpdateForm, onOpen: onOpenUpdateForm, onClose: onCloseUpdateForm} = useModalService()
+    const {open: openDeleteConfirm, onOpen: onOpenDeleteConfirm, onClose: onCloseDeleteConfirm} = useModalService()
 
     const handleSelect = useCallback((id: number) => {
         onSelect(id)
@@ -44,6 +46,16 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
         onOpenUpdateForm()
     },[onCloseInfo, onOpenUpdateForm])
 
+    const handleDelete = useCallback(() => {
+        onOpenDeleteConfirm()
+    },[onOpenDeleteConfirm])
+
+    const handleDeleteConfirm = useCallback(() => {
+        onDelete()
+        onDeselect()
+        onCloseDeleteConfirm()
+    }, [onDelete, onCloseDeleteConfirm, onDeselect])
+
 
     const actions: Array<MenuActionItem> = useMemo(() => ([
         {
@@ -57,11 +69,11 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
             id: "onDelete",
             label: "Delete",
             process: () => {
-                onDelete()
+                handleDelete()
                 handleClose()
             }
         }
-    ]),[onDelete, handleUpdate, handleClose])
+    ]),[handleDelete, handleUpdate, handleClose])
 
     const formData = useMemo(() => {
         if(dataSelected){
@@ -71,6 +83,8 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
         }
         return undefined
     },[dataSelected, formDataConverter])
+
+    const idSelected = useMemo(() => dataSelected && dataSelected.id, [dataSelected])
 
     const CreateForm = useMemo(() => {
         return FormCreateComponent 
@@ -86,10 +100,11 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
             ? React.cloneElement(FormUpdateComponent, {...FormUpdateComponent.props, 
                 onSubmitCallback: (onCloseUpdateForm),
                 onCancel: onCloseUpdateForm,
-                formData 
+                formData,
+                idSelected 
             })
             : undefined
-    },[FormUpdateComponent, formData, onCloseUpdateForm])
+    },[FormUpdateComponent, formData, onCloseUpdateForm, idSelected])
 
 
     return <Paper>
@@ -122,6 +137,13 @@ const EdtionView: React.FC<EditionViewProps> = ({attributs, onDeselect, onSelect
                 {UpdateForm}
             </Modal>
         }
+        <DialogConfirm
+            titel="Delete item"
+            text="Are you sure to delete this item"
+            onClose={onCloseDeleteConfirm}
+            onConfirm={handleDeleteConfirm}
+            open={openDeleteConfirm}
+        />
     </Paper>
 }
 
