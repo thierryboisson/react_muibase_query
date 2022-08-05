@@ -119,13 +119,34 @@ const css =`
     background-color: ${color.textPrimary.main};
     color: white;
   }
+
+  input {
+    font-size: 16px;
+    padding: ${spacing(2)}px;
+    border-color: ${color.textPrimary.main};
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-style: solid;
+  }
+  ul {
+    padding: 0px
+  }
   .row-selected{
     color: ${color.primary.main};
     font-weight: 80;
   }
+
+  .app {
+    width: 100%;
+    height: 100%;
+  }
   .paper-container {
     background-color: ${color.textPrimary.light};
     padding:${spacing(6)}px;
+    width: 100%;
+    height: 100%;
   }
   .paper {
     padding:${spacing(6)}px;
@@ -177,15 +198,11 @@ const css =`
   .input-label {
     padding-left: ${spacing(2)}px;
   }
-  input {
-    font-size: 16px;
-    padding: ${spacing(2)}px;
-    border-color: ${color.textPrimary.main};
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-style: solid;
+
+  .content-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
   }
 `;
 
