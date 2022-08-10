@@ -1,4 +1,4 @@
-import { menuItemUnstyledClasses, MenuUnstyledContext, MenuUnstyledContextType, useMenu, useMenuItem } from '@mui/base';
+import { MenuUnstyledContext, MenuUnstyledContextType, useMenu, useMenuItem } from '@mui/base';
 import clsx from 'clsx';
 import React, { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom';
@@ -82,7 +82,7 @@ const NavBar: React.FC<NavbarProps> = ({actions}) => {
       <React.Fragment>
         <Menu>
            {actions.map(({label, id, path}) => (
-             <MenuItem selected={id === menuSelectedId} key={id}><Link onClick={() => onSelect(id)} to={path}>{label}</Link></MenuItem>
+             <Link key={id} onClick={() => onSelect(id)} to={path}><MenuItem selected={id === menuSelectedId}>{label}</MenuItem></Link>
            ))}
         </Menu>
       </React.Fragment>

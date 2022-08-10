@@ -149,8 +149,6 @@ const css =`
   .paper-container {
     background-color: ${color.textPrimary.light};
     padding:${spacing(6)}px;
-    width: 100%;
-    height: 100%;
   }
   .paper {
     padding:${spacing(6)}px;
@@ -192,9 +190,7 @@ const css =`
 
   .dialog-button-container {
     display: flex;
-    width: 100%;
     align-items: center;
-    justify-content: space-around;
   }
   .input-container {
     padding-bottom: ${spacing(2)}px;

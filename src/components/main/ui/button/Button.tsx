@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export interface ButtonProps {
     children: ReactNode,
-    onClick: (arg: any | undefined) => void 
+    onClick?: (arg: any | undefined) => void 
 }
 
 const Button: React.FC<ButtonProps> = ({children, onClick, ...other}) => (
