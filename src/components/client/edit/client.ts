@@ -50,14 +50,14 @@ export const updateClient = async (values: UpdateClientVariables) => {
     return res.data
 }
 
-export const useUdpateClient = () => {
+export const useUdpateClient = ({id}:{id: number}) => {
     const queryClient = useQueryClient()
     const {mutate} = useMutation<UpdateClientResponse, any, UpdateClientVariables>(
         updateClient,
         {
         onSuccess: () => {
             queryClient.invalidateQueries(QUERY_GET_CLIENTS)
-            queryClient.invalidateQueries(QUERY_GET_CLIENT)
+            queryClient.invalidateQueries([QUERY_GET_CLIENT, id])
         }, 
         onError:() => {
             console.error("failed to create client")
