@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios"
-import { useMutation, useQueryClient } from "react-query"
+import { CLIENT_SERVICE_URL } from ".."
+import { ApiCall, useMutationAPIDataAccess } from "../../api_data_access"
 import { QUERY_GET_CLIENTS } from "../get/client"
 import { ClientData } from "../model"
 
@@ -11,22 +11,18 @@ export interface DeleteClientResponse {
     delete_client_manager_client_by_pk: ClientData
 }
 
-export const deleteClient = async ({id}: DeleteClientVariables) => {
-    const res: AxiosResponse = await axios.delete(`http://localhost:8082/api/rest/client/${id}`)
-    return res.data
+export const deleteClient = ({id}: DeleteClientVariables) => {
+    return ApiCall.delete<DeleteClientVariables, DeleteClientResponse>(CLIENT_SERVICE_URL,id)
 }
 
 export const useDeleteClient = () => {
-    const queryClient = useQueryClient()
-    const {mutate} = useMutation<DeleteClientResponse, any, DeleteClientVariables>(
+    const {mutate} = useMutationAPIDataAccess(
         deleteClient,
         {
-        onSuccess: () => {
-            queryClient.invalidateQueries(QUERY_GET_CLIENTS)
-        }, 
-        onError:() => {
-            console.error("failed to create client")
+            refetch:[
+                {query: QUERY_GET_CLIENTS}
+            ]
         }
-    })
+    )
     return {mutate}
 }

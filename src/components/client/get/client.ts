@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { useQuery } from "react-query";
+import { QueryKeyAPIDataAccess } from "../../api_data_access";
 import { ClientFullResponse, ClientResponse } from "../model";
 
 export const QUERY_GET_CLIENTS = "get_clients"
 export const QUERY_GET_CLIENT = "get_client"
-
 
 const getClients = async () => {
     const res: AxiosResponse = await axios.get("http://localhost:8082/api/rest/clients")

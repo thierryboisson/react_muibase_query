@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { CLIENT_SERVICE_URL } from "..";
+import {ApiCall, useMutationAPIDataAccess} from "../../api_data_access"
 import { QUERY_GET_CLIENT, QUERY_GET_CLIENTS } from "../get/client";
 import { ClientData } from "../model";
 
@@ -13,23 +13,19 @@ export interface CreateClientResponse {
     insert_client_manager_client: ClientData
 }    
 
-export const createClient = async (values: CreateClientVariables) => {
-    const res: AxiosResponse = await axios.post("http://localhost:8082/api/rest/client", values)
-    return res.data
-}
+export const createClient = async (values: CreateClientVariables) => new Promise<CreateClientResponse>(() => {
+    return ApiCall.post<CreateClientVariables, CreateClientResponse>(CLIENT_SERVICE_URL, values)
+})
 
 export const useCreateClient = () => {
-    const queryClient = useQueryClient()
-    const {mutate} = useMutation<CreateClientResponse, any, CreateClientVariables>(
+    const {mutate} = useMutationAPIDataAccess<CreateClientResponse, any, CreateClientVariables>(
         createClient,
         {
-        onSuccess: () => {
-            queryClient.invalidateQueries(QUERY_GET_CLIENTS)
-        }, 
-        onError:() => {
-            console.error("failed to create client")
+            refetch:[{
+                query: QUERY_GET_CLIENTS
+            }]
         }
-    })
+    )
     return {mutate}
 }
 
@@ -45,23 +41,21 @@ export interface UpdateClientResponse {
 }    
 
 
-export const updateClient = async (values: UpdateClientVariables) => {
-    const res: AxiosResponse = await axios.put("http://localhost:8082/api/rest/client", values)
-    return res.data
+export const updateClient = (values: UpdateClientVariables) => {
+   return ApiCall.put<UpdateClientVariables, UpdateClientResponse>(CLIENT_SERVICE_URL, values)
 }
 
 export const useUdpateClient = ({id}:{id: number}) => {
-    const queryClient = useQueryClient()
-    const {mutate} = useMutation<UpdateClientResponse, any, UpdateClientVariables>(
+    const {mutate} = useMutationAPIDataAccess<UpdateClientResponse, any, UpdateClientVariables>(
         updateClient,
         {
-        onSuccess: () => {
-            queryClient.invalidateQueries(QUERY_GET_CLIENTS)
-            queryClient.invalidateQueries([QUERY_GET_CLIENT, id])
-        }, 
-        onError:() => {
-            console.error("failed to create client")
-        }
-    })
+            refetch:[{
+                query: QUERY_GET_CLIENTS
+            },{
+                query: QUERY_GET_CLIENT,
+                variables: {clientId: id}
+            }]
+        })
+       
     return {mutate}
 }
