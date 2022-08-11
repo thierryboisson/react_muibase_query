@@ -1,5 +1,5 @@
 import { CLIENT_SERVICE_URL } from ".."
-import { ApiCall, useMutationAPIDataAccess } from "../../api_data_access"
+import { ApiCall, useMutationAPIDataAccess } from "../../../api_data_access"
 import { QUERY_GET_CLIENTS } from "../get/client"
 import { ClientData } from "../model"
 

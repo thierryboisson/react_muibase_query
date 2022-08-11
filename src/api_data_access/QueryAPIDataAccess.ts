@@ -19,7 +19,8 @@ export interface QueryAPIDataAccessOptions<TQueryFnData = unknown, TError = unkn
     queryOptions?: Omit<UseQueryOptions<TQueryFnData, TError, TQueryFnData, QueryKey>, "queryKey" | "queryFn">
 } 
 
-export function useQueryAPIDataAccess<TQueryFnData = unknown,TError = unknown, TVariables = unknown> (query: string, apiCall: (variables: TVariables | undefined) => Promise<TQueryFnData>, options?: QueryAPIDataAccessOptions<TQueryFnData, TError,  TVariables> ): UseQueryResult<TQueryFnData, TError> {
+
+export function useQueryAPIDataAccess<TQueryFnData = unknown,TError = unknown, TVariables = unknown> (query: string, apiCall: (variables?: TVariables) => Promise<TQueryFnData> , options?: QueryAPIDataAccessOptions<TQueryFnData, TError,  TVariables> ): UseQueryResult<TQueryFnData, TError> {
     
     const queryKey: QueryKey = useMemo(() => {
        return formateQueryKeyDataAccessToReactQuery<TVariables>({query, variables: options?.variables})

@@ -1,5 +1,5 @@
 import { CLIENT_SERVICE_URL } from "..";
-import {ApiCall, useMutationAPIDataAccess} from "../../api_data_access"
+import {ApiCall, useMutationAPIDataAccess} from "../../../api_data_access"
 import { QUERY_GET_CLIENT, QUERY_GET_CLIENTS } from "../get/client";
 import { ClientData } from "../model";
 
@@ -13,9 +13,9 @@ export interface CreateClientResponse {
     insert_client_manager_client: ClientData
 }    
 
-export const createClient = async (values: CreateClientVariables) => new Promise<CreateClientResponse>(() => {
+export const createClient = (values: CreateClientVariables) => {
     return ApiCall.post<CreateClientVariables, CreateClientResponse>(CLIENT_SERVICE_URL, values)
-})
+}
 
 export const useCreateClient = () => {
     const {mutate} = useMutationAPIDataAccess<CreateClientResponse, any, CreateClientVariables>(

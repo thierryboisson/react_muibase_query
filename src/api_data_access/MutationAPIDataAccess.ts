@@ -14,7 +14,6 @@ export function useMutationAPIDataAccess<TData = unknown, TError = unknown, TVar
     const mutationOptions: Omit<UseMutationOptions<TData, TError, TVariables, TContext>, 'mutationKey' | 'mutationFn'> = useMemo(() => {
         const mutationOptionsFromProps = options?.mutationOptions
        
-
         const onError = mutationOptionsFromProps?.onError
             ? mutationOptionsFromProps.onError
             : () => console.error(`Problem to mutate`)
@@ -32,7 +31,7 @@ export function useMutationAPIDataAccess<TData = unknown, TError = unknown, TVar
         return {
             ...mutationOptionsFromProps,
             onError,
-            onSuccess
+            onSuccess,
         }    
     },[options, queryClient])
 
