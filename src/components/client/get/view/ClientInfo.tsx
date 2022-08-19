@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Outlet, useNavigate, useParams } from "react-router-dom"
+import { convertClientDataToClientView } from "../.."
 import routes from "../../../main/routes"
 import DialogConfirm from "../../../main/ui/dialog/DialogConfirm"
 import { useModalService } from "../../../main/ui/dialog/Modal"
@@ -8,6 +9,7 @@ import PanelInfo from "../../../main/ui/panel/PanelInfo"
 import Progress from "../../../main/ui/progress/Progress"
 import { Attribut } from "../../../main/ui/table/Table"
 import { useDeleteClient } from "../../delete/client"
+import { ClientView } from "../../model"
 import { useGetClient } from "../client"
 
 export const attributs: Array<Attribut> = [
@@ -16,7 +18,9 @@ export const attributs: Array<Attribut> = [
     { id: "email", label: "Email" }
 ]
 
-
+export const attributsLightAddress: Array<Attribut> = [
+    {id: "value", label: "Client Addresses"},
+]
 
 const ClientInfo = () => {
  
@@ -34,17 +38,16 @@ const ClientInfo = () => {
         }
     },[clientId, navigate])
 
-    const handleCancel = useCallback(() => {
-        navigate(routes.client.id)
-    },[navigate])
-
     const confirmDelete = useCallback(() => {
         onClose()
         mutate({id})
         navigate(routes.client.path)
     },[mutate, id, onClose, navigate])
 
-    const actions: Array<MenuActionItem> = useMemo(() => ([
+    const {data, isLoading} = useGetClient({id})
+
+    const actions: Array<MenuActionItem> = useMemo(() => {
+        const actionDefault = [
         {
             id: "onUpdate",
             label: "Modify",
@@ -58,10 +61,20 @@ const ClientInfo = () => {
             process: () => {
                 onOpen()
             }
+        }]
+        if(data?.addresses.length){
+            actionDefault.push( {
+                id: "addressesView",
+                label: "See Addresses",
+                process: () => {
+                    navigate('address')
+                }
+            })
         }
-    ]),[navigate, onOpen, clientId])
+        return actionDefault
+    },[navigate, onOpen, clientId, data])
 
-    const {data, isLoading} = useGetClient({id})
+    const clientView: ClientView | undefined = useMemo(() => data ? convertClientDataToClientView(data) : undefined, [data])
 
     return !isLoading
         ? <React.Fragment>
@@ -73,11 +86,11 @@ const ClientInfo = () => {
                 open={open}
             />
             <PanelInfo
-            attributs={attributs}
-            data={data}
-            onCancel={handleCancel}
-            actions={actions}
-        />
+                attributs={attributs}
+                data={clientView}
+                actions={actions}
+            />
+            <Outlet/>
         </React.Fragment>
         : <Progress/>
 }

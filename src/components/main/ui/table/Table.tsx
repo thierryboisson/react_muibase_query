@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 export interface Attribut {
     id: string;
@@ -9,7 +9,7 @@ export interface Attribut {
 export interface TableProps {
     attributs: Array<Attribut>;
     data: Array<any>;
-    onSelect?: (id: number) => void
+    onSelect?: boolean
 }
 
 const Table: React.FC<TableProps> = ({attributs, data, onSelect}) => {
@@ -22,12 +22,6 @@ const Table: React.FC<TableProps> = ({attributs, data, onSelect}) => {
     const handleHoverDisable = useCallback(() => {
         setIdHover(-1)
     },[])
-
-    const handleSelect = useCallback((id: number) => {
-        if(onSelect){
-            onSelect(id)
-        }
-    },[onSelect])
 
     return (
        <React.Fragment>
@@ -44,18 +38,23 @@ const Table: React.FC<TableProps> = ({attributs, data, onSelect}) => {
                 >
                     {data.map(item => (
                         <tr 
-                            onClick={() => handleSelect(item["id"])}
                             className={idHover === item["id"] ? "row-selected" : ""}
                             key={item["id"]}
                             onMouseEnter={() => handleHover(item["id"])}
                         >
                             {attributs.map(attribut => (
-                                <td key={`${attribut.id} ${item["id"]}`}><Link to={item["id"].toString()}>{item[attribut.id]}</Link></td>
+                                <td key={`${attribut.id} ${item["id"]}`}>
+                                    {onSelect
+                                        ? <Link to={item["id"].toString()}>{item[attribut.id]}</Link>
+                                        : item[attribut.id]
+                                    }
+                                </td>
                             ))}
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {onSelect && <Outlet/>}
        </React.Fragment>
     )
 }

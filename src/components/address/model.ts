@@ -9,3 +9,8 @@ export interface AddressData {
     mail_box_name: string;
     client?: ClientData
 }
+
+export interface AddressLightView {
+    id: number;
+    value: string
+}

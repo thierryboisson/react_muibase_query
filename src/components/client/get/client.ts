@@ -1,6 +1,6 @@
 import { CLIENT_SERVICE_URL } from "..";
 import { ApiCall, useQueryAPIDataAccess } from "../../../api_data_access";
-import { ClientFullResponse, ClientResponse } from "../model";
+import { ClientFullData, ClientFullResponse, ClientResponse } from "../model";
 
 export const QUERY_GET_CLIENTS = "get_clients"
 export const QUERY_GET_CLIENT = "get_client"
@@ -23,7 +23,7 @@ const getClient = (variables?: GetClientVariables) => {
     return ApiCall.get<ClientFullResponse, GetClientVariables>(CLIENT_SERVICE_URL, variables?.id) 
 }
 
-export const useGetClient = ({id}: GetClientVariables) => {
+export const useGetClient = ({id}: GetClientVariables): {data?: ClientFullData, isLoading: boolean } => {
 
     const {data, isLoading} =  useQueryAPIDataAccess<ClientFullResponse, any, GetClientVariables >(QUERY_GET_CLIENT, getClient , {
         queryOptions: {

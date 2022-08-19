@@ -1,4 +1,6 @@
 import { Route, Routes, useNavigate, } from "react-router-dom";
+import AddressInfo from "../address/get/view/AddressInfo";
+import ClientAddresses from "../address/get/view/ClientAddress";
 import ClientCreateForm from "../client/edit/ui/ClientCreateForm";
 import ClientUpdateForm from "../client/edit/ui/ClientUpdateForm";
 import ClientInfo from "../client/get/view/ClientInfo";
@@ -25,10 +27,14 @@ const Content = () => {
                     <Route index element={<div>Welcome</div>}/>
                     <Route path={routes.client_manager.id}>
                         <Route path={routes.client.id} element={<ClientList/>}>
-                            <Route path=":clientId" element={<ClientInfo/>}></Route>
+                            <Route path=":clientId" element={<ClientInfo/>}>
+                                <Route path="address" element={<ClientAddresses/>}>
+                                    <Route path=":addressId" element={<AddressInfo/>}/>
+                                </Route>
+                            </Route>
                             <Route path={routes.createClient.id} element={<ClientCreateForm onSubmitCallback={() => navigate(routes.client.path)} onCancel={() => navigate(routes.client.path)} />} />
                             <Route path={routes.updateClient.id}>
-                                <Route path=":clientId" element={<ClientUpdateForm onSubmitCallback={() => navigate(routes.client.path)} onCancel={() => navigate(routes.client.path)}/>}/>
+                                <Route path=":clientId" element={<ClientUpdateForm onSubmitCallback={() => navigate(routes.client.path)} onCancel={() => navigate(routes.client.path)}/>}/> 
                             </Route>
                         </Route>
                         <Route path={routes.address.id} element="Adresss"></Route>

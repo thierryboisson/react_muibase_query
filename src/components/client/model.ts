@@ -1,4 +1,4 @@
-import { AddressData } from "../address/model";
+import { AddressData, AddressLightView } from "../address/model";
 import { PrestationData } from "../prestation/model";
 
 export interface ClientData {
@@ -24,4 +24,12 @@ export interface ClientFullData {
 
 export interface ClientFullResponse {
     client_manager_client_by_pk: ClientFullData
+}
+
+export interface ClientView {
+    id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    addresses: Array<AddressLightView>;
 }

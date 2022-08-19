@@ -68,7 +68,10 @@ const MenuAction: React.FC<MenuActionProps> = ({options}) => {
         componentsProps={{ listbox: { id: 'simple-menu' } }}
       >
         {options.map(option => (
-             <StyledMenuItem key={option.id} onClick={option.process}>
+             <StyledMenuItem key={option.id} onClick={() => {
+              option.process()
+              setAnchorEl(null)
+             }}>
                 {option.label}
             </StyledMenuItem>
         ))}
